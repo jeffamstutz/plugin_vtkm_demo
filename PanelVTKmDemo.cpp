@@ -23,25 +23,45 @@
 
 // ospray_sg
 
-// jet_plugin
+// VTKm plugin
 #include "PanelVTKmDemo.h"
+#include "vtkm_dataset_sg.h"
+#include "vtkm_tangle_field.h"
 
 namespace ospray {
   namespace vtkm_demo_plugin {
 
-    PanelVTKmDemo::PanelVTKmDemo() : Panel("VTKmDemo Panel - Plugin") {}
+    PanelVTKmDemo::PanelVTKmDemo() : Panel("VTKm Demo Panel - Plugin") {}
 
     void PanelVTKmDemo::buildUI()
     {
       auto flags = g_defaultWindowFlags | ImGuiWindowFlags_AlwaysAutoResize;
-      if (ImGui::Begin("VTKmDemo Panel", nullptr, flags)) {
+      if (ImGui::Begin("VTKm Demo Panel", nullptr, flags)) {
+        ImGui::Text("Data Generation Controls:");
 
-        ImGui::Text("Volume Controls:");
+        ImGui::DragInt3("volume dimensions", (int *)&dims.x, .01f);
+        if (ImGui::Button("Create Tangle Field")) {
+          job_scheduler::scheduleJob([&]() {
+            job_scheduler::Nodes retval;
+            auto dataset = createTangleField(dims);
+            auto node    = createVolumeNode(dataset);
+            retval.push_back(node);
+            return retval;
+          });
+        }
 
         ImGui::NewLine();
         ImGui::Separator();
 
         ImGui::Text("Isosurface Controls:");
+        ImGui::NewLine();
+
+        ImGui::Text("TODO:");
+        ImGui::Text("  - find a volume in the scene");
+        ImGui::Text("  - define isosurface(s) for the found volume");
+        ImGui::Text("  - invoke VTKm marching cubes filter");
+        ImGui::Text("  - add newly generated triangle mesh to the scene");
+
         ImGui::NewLine();
 
         if (ImGui::Button("Close"))

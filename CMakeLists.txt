@@ -21,8 +21,10 @@ if (BUILD_PLUGIN_VTKM_DEMO)
   find_package(VTKm REQUIRED)
 
   ospray_create_library(ospray_studio_plugin_vtkm_demo
-    plugin_vtkm_demo.cpp
     PanelVTKmDemo.cpp
+    plugin_vtkm_demo.cpp
+    vtkm_dataset_sg.cpp
+    vtkm_tangle_field.cpp
   )
 
   target_link_libraries(ospray_studio_plugin_vtkm_demo

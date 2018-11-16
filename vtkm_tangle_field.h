@@ -16,27 +16,16 @@
 
 #pragma once
 
-#include "app/widgets/Panel.h"
-// ospcommon
-#include "ospray/ospcommon/vec.h"
+#include <vtkm/cont/DataSet.h>
+
+#include <ospray/ospcommon/vec.h>
 
 namespace ospray {
+  using namespace ospcommon;
+
   namespace vtkm_demo_plugin {
-    using namespace ospcommon;
 
-    struct PanelVTKmDemo : public Panel
-    {
-      PanelVTKmDemo();
-      ~PanelVTKmDemo() override = default;
-
-      void buildUI() override;
-
-     private:
-      // Data //
-
-      // data generation data
-      vec3i dims{100};
-    };
+    vtkm::cont::DataSet createTangleField(vec3i dims);
 
   }  // namespace vtkm_demo_plugin
 }  // namespace ospray
