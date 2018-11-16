@@ -29,7 +29,7 @@ namespace ospray {
       auto voxel_data  = std::make_shared<sg::DataVector1f>();
 
       using ArrayType      = vtkm::cont::ArrayHandle<vtkm::Float32>;
-      auto vtkmFieldPortal = data.GetField("field_values")
+      auto vtkmFieldPortal = data.GetField("field1")
                                  .GetData()
                                  .Cast<ArrayType>()
                                  .GetStorage()

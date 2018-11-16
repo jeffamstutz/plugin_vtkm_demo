@@ -16,8 +16,9 @@
 
 #pragma once
 
+// VTKm
 #include <vtkm/cont/DataSet.h>
-
+// ospcommon
 #include <ospray/ospcommon/vec.h>
 
 namespace ospray {
@@ -25,7 +26,7 @@ namespace ospray {
 
   namespace vtkm_demo_plugin {
 
-    vtkm::cont::DataSet createTangleField(vec3i dims);
+    std::unique_ptr<vtkm::cont::DataSet> createTangleField(vec3i dims);
 
   }  // namespace vtkm_demo_plugin
 }  // namespace ospray

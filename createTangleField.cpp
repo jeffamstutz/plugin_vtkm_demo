@@ -14,9 +14,11 @@
 // limitations under the License.                                           //
 // ======================================================================== //
 
-#include "vtkm_tangle_field.h"
+#include "createTangleField.h"
 // ospcommon
 #include <ospray/ospcommon/box.h>
+// std
+#include <memory>
 
 namespace ospray {
   namespace vtkm_demo_plugin {
@@ -59,11 +61,11 @@ namespace ospray {
     };
 
     // Construct an input data set using the tangle field worklet
-    vtkm::cont::DataSet createTangleField(vec3i dims)
+    std::unique_ptr<vtkm::cont::DataSet> createTangleField(vec3i dims)
     {
       using namespace vtkm::cont;
 
-      DataSet dataSet;
+      auto dataSet = std::make_unique<DataSet>();
 
       const vec3i vdims = dims + 1;
       const vec3f idims = 1.f / dims;
@@ -81,16 +83,15 @@ namespace ospray {
 
       ArrayHandleUniformPointCoordinates coordinates(
           {vdims.x, vdims.y, vdims.z}, origin, spacing);
-      dataSet.AddCoordinateSystem(
+      dataSet->AddCoordinateSystem(
           CoordinateSystem("coordinates", coordinates));
-
-      dataSet.AddField(Field(
-          "field_values", Field::Association::POINTS, fieldArray));
+      dataSet->AddField(
+          Field("field1", Field::Association::POINTS, fieldArray));
 
       static const vtkm::IdComponent ndim = 3;
       CellSetStructured<ndim> cellSet("cells");
       cellSet.SetPointDimensions({vdims.x, vdims.y, vdims.z});
-      dataSet.AddCellSet(cellSet);
+      dataSet->AddCellSet(cellSet);
 
       return dataSet;
     }

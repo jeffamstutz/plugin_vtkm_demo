@@ -25,8 +25,7 @@
 
 // VTKm plugin
 #include "PanelVTKmDemo.h"
-#include "vtkm_dataset_sg.h"
-#include "vtkm_tangle_field.h"
+#include "createTangleField.h"
 
 namespace ospray {
   namespace vtkm_demo_plugin {
@@ -43,8 +42,8 @@ namespace ospray {
         if (ImGui::Button("Create Tangle Field")) {
           job_scheduler::scheduleJob([&]() {
             job_scheduler::Nodes retval;
-            auto dataset = createTangleField(dims);
-            auto node    = createVolumeNode(dataset);
+            dataset   = createTangleField(dims);
+            auto node = createVolumeNode(*dataset);
             retval.push_back(node);
             return retval;
           });
@@ -61,6 +60,17 @@ namespace ospray {
         ImGui::Text("  - define isosurface(s) for the found volume");
         ImGui::Text("  - invoke VTKm marching cubes filter");
         ImGui::Text("  - add newly generated triangle mesh to the scene");
+
+#if 0
+        vtkm::filter::MarchingCubes filter;
+        filter.SetGenerateNormals(true);
+        filter.SetMergeDuplicatePoints(false);
+        filter.SetIsoValue(0, 0.1);
+        filter.SetActiveField("field1");
+        filter.SetFieldsToPass({ "field1" });
+
+        vtkm::cont::DataSet outputData = filter.Execute(dataSet);
+#endif
 
         ImGui::NewLine();
 

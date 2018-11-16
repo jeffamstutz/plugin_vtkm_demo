@@ -19,6 +19,8 @@
 #include "app/widgets/Panel.h"
 // ospcommon
 #include "ospray/ospcommon/vec.h"
+// plugin
+#include "vtkm_dataset_sg.h"
 
 namespace ospray {
   namespace vtkm_demo_plugin {
@@ -36,6 +38,9 @@ namespace ospray {
 
       // data generation data
       vec3i dims{100};
+
+      // VTKm data
+      std::unique_ptr<vtkm::cont::DataSet> dataset;
     };
 
   }  // namespace vtkm_demo_plugin
