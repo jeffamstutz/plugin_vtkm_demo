@@ -29,16 +29,14 @@ namespace ospray {
       auto voxel_data  = std::make_shared<sg::DataVector1f>();
 
       using ArrayType      = vtkm::cont::ArrayHandle<vtkm::Float32>;
-      auto vtkmFieldPortal = data.GetField("field1")
+      const auto& array_storage = data.GetField("field1")
                                  .GetData()
                                  .Cast<ArrayType>()
-                                 .GetStorage()
-                                 .GetPortal();
+                                 .GetStorage();
 
       // TODO: figure out how to use VTKm's memory directly...ugh!
-      vtkm::cont::ArrayPortalToIterators vtkmIterators(vtkmFieldPortal);
-      std::copy(vtkmIterators.GetBegin(),
-                vtkmIterators.GetEnd(),
+      std::copy(array_storage.GetArray(),
+                array_storage.GetArray() + array_storage.GetNumberOfValues(),
                 std::back_inserter(voxel_data->v));
 
       voxel_data->setName("voxelData");
