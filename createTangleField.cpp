@@ -19,6 +19,9 @@
 #include <ospray/ospcommon/box.h>
 // std
 #include <memory>
+//vtkm
+#include <vtkm/worklet/Invoker.h>
+#include <vtkm/worklet/WorkletMapField.h>
 
 namespace ospray {
   namespace vtkm_demo_plugin {
@@ -74,9 +77,9 @@ namespace ospray {
       ArrayHandle<vtkm::Float32> fieldArray;
       ArrayHandleCounting<vtkm::Id> vertexCountImplicitArray(
           0, 1, vdims.product());
-      vtkm::worklet::DispatcherMapField<TangleField> tangleFieldDispatcher(
-          TangleField(vdims, bounds));
-      tangleFieldDispatcher.Invoke(vertexCountImplicitArray, fieldArray);
+
+      vtkm::worklet::Invoker invoker(vtkm::cont::DeviceAdapterTagTBB{});
+      invoker(TangleField{vdims,bounds}, vertexCountImplicitArray, fieldArray);
 
       vtkm::Vec<vtkm::FloatDefault, 3> origin(0.0f, 0.0f, 0.0f);
       vtkm::Vec<vtkm::FloatDefault, 3> spacing(idims.x, idims.y, idims.z);
