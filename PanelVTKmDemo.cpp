@@ -30,7 +30,7 @@
 namespace ospray {
   namespace vtkm_demo_plugin {
 
-    PanelVTKmDemo::PanelVTKmDemo() : Panel("VTKm Demo Panel - Plugin") {}
+    PanelVTKmDemo::PanelVTKmDemo() : Panel("VTKm Demo Panel") {}
 
     void PanelVTKmDemo::buildUI()
     {
