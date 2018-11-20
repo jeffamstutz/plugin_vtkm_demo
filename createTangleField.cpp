@@ -19,7 +19,7 @@
 #include <ospray/ospcommon/box.h>
 // std
 #include <memory>
-//vtkm
+// vtkm
 #include <vtkm/worklet/Invoker.h>
 #include <vtkm/worklet/WorkletMapField.h>
 
@@ -64,14 +64,15 @@ namespace ospray {
     };
 
     // Construct an input data set using the tangle field worklet
-    std::unique_ptr<vtkm::cont::DataSet> createTangleField(vec3i dims)
+    std::unique_ptr<vtkm::cont::DataSet> createTangleField(vec3i _dims)
     {
       using namespace vtkm::cont;
 
       auto dataSet = std::make_unique<DataSet>();
 
-      const vec3i vdims = dims + 1;
-      const vec3f idims = 1.f / dims;
+      const vec3ul dims  = _dims;
+      const vec3ul vdims = dims + 1;
+      const vec3f idims  = 1.f / dims;
       const box3f bounds{vec3f(-1.f), vec3f(1.f)};
 
       ArrayHandle<vtkm::Float32> fieldArray;
@@ -79,7 +80,7 @@ namespace ospray {
           0, 1, vdims.product());
 
       vtkm::worklet::Invoker invoker(vtkm::cont::DeviceAdapterTagTBB{});
-      invoker(TangleField{vdims,bounds}, vertexCountImplicitArray, fieldArray);
+      invoker(TangleField{vdims, bounds}, vertexCountImplicitArray, fieldArray);
 
       vtkm::Vec<vtkm::FloatDefault, 3> origin(0.0f, 0.0f, 0.0f);
       vtkm::Vec<vtkm::FloatDefault, 3> spacing(idims.x, idims.y, idims.z);
