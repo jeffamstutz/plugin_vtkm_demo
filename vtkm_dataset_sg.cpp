@@ -27,18 +27,15 @@ namespace ospray {
     {
       auto volume_node = sg::createNode("vtkmVolume", "StructuredVolume");
 
-      using ArrayType      = vtkm::cont::ArrayHandle<vtkm::Float32>;
-      auto& array_storage = data.GetField("field1")
-                                 .GetData()
-                                 .Cast<ArrayType>()
-                                 .GetStorage();
+      using ArrayType = vtkm::cont::ArrayHandle<vtkm::Float32>;
+      auto &array_storage =
+          data.GetField("field1").GetData().Cast<ArrayType>().GetStorage();
 
-      //This stealing only works with VTK-m allocated memory. If the memory
-      //that vtk-m is holding is actually complex, we need to grab the free function
-      //and propagate that over to ospray ( use GetDeleteFunction )
-      auto voxel_data  = std::make_shared<sg::DataArray1f>( array_storage.StealArray(),
-                                                            array_storage.GetNumberOfValues(),
-                                                            true);
+      // This stealing only works with VTK-m allocated memory. If the memory
+      // that vtk-m is holding is actually complex, we need to grab the free
+      // function and propagate that over to ospray ( use GetDeleteFunction )
+      auto voxel_data = std::make_shared<sg::DataArray1f>(
+          array_storage.StealArray(), array_storage.GetNumberOfValues(), true);
       voxel_data->setName("voxelData");
 
       volume_node->add(voxel_data);
